@@ -23,6 +23,10 @@
 - CoinGecko: https://www.coingecko.com/en/coins/numetal
 - Website: https://gokhanturhan.com/numetal/
 
+### CONVICTION
+
+- Not deployed yet. There is no contract address, so any token calling itself CONVICTION right now is not ours.
+
 ## The snapshot
 
 [`snapshot.csv`](snapshot.csv) lists every EVM account that held any token from the
