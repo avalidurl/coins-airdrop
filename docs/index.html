@@ -22,8 +22,10 @@ h2{font-size:22px;margin:40px 0 12px;font-weight:600}h3{font-size:16px;margin:0 
 .addr{word-break:break-all}code{color:var(--dim)}
 button.copy{font:inherit;font-size:12px;background:none;color:var(--ink);border:1px solid var(--faint);padding:1px 8px;cursor:pointer}button.copy:hover{border-color:var(--ikb)}
 input{font:inherit;width:100%;background:none;color:var(--ink);border:1px solid var(--faint);padding:8px 10px;margin:8px 0}input:focus{outline:none;border-color:var(--ikb)}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--faint);white-space:nowrap}th{color:var(--dim);font-weight:400}
-td.a{font-variant-numeric:tabular-nums}.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--faint)}th{color:var(--dim);font-weight:400;white-space:nowrap}
+td.a{font-variant-numeric:tabular-nums;white-space:nowrap}td.held{white-space:normal;word-break:break-word;overflow-wrap:anywhere;line-height:1.7}
+.n{color:var(--dim);margin-right:6px;white-space:nowrap}.chip{display:inline-block;border:1px solid var(--faint);padding:0 6px;margin:1px 2px 1px 0;font-size:11px;line-height:1.6;white-space:nowrap;vertical-align:middle}
+td.al{white-space:nowrap}.wrap{overflow-x:auto}
 footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--faint);color:var(--dim)}
 .chk{border:1px solid var(--ikb);padding:16px;margin:20px 0}.chk .row{display:flex;gap:8px}.chk .row input{margin:0}.chk button.go{font:inherit;background:var(--ikb);color:#fff;border:0;padding:8px 14px;cursor:pointer}.res{margin-top:10px;font-size:13px}.res .ok{color:#3c3}.res .no{color:var(--red)}
 </style></head><body>
@@ -32,7 +34,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--faint);color:
 <div class="dim">Ends 21 Nov 2026, 20:22 Istanbul (UTC+3) / 21 Nov 2026, 17:22 UTC</div></div>
 
 <div class="chk" id="check"><div class="lab" style="text-transform:uppercase;letter-spacing:.12em;font-size:12px">Check your wallet</div>
-<p class="dim" style="margin:6px 0 10px">Paste your wallet address to see if it's in the community snapshot. 2,149 wallets are in it.</p>
+<p class="dim" style="margin:6px 0 10px">Paste your wallet address to see if it's in the community snapshot. 2,146 wallets are in it.</p>
 <div class="row"><input id="me" type="text" placeholder="0x… your wallet address" autocomplete="off" spellcheck="false"><button class="go" id="go">Check</button></div>
 <div class="res" id="res"></div></div>
 
@@ -56,11 +58,11 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--faint);color:
 </div>
 
 <h2>The snapshot</h2>
-<p class="dim">5,176 holdings · 2,149 unique addresses · 987 EVM tokens on 8 chains · taken 19 Nov 2026 around 19:17 Istanbul time (Robinhood Chain 19:33). Allocation: computing.<br>
+<p class="dim">5,097 holdings · 2,146 unique addresses · 987 EVM tokens on 8 chains · taken 19 Nov 2026 around 19:17 Istanbul time (Robinhood Chain 19:33). Allocation: computing. Burn addresses are not listed.<br>
 <a href="snapshot.csv">Download CSV</a> · <a href="https://gist.github.com/avalidurl/23020b8b4981e42557fe129de3d5a00e" target="_blank" rel="noopener">Gist ↗</a> · <a href="https://github.com/avalidurl/coins-airdrop" target="_blank" rel="noopener">Repo ↗</a></p>
 <input id="q" type="search" placeholder="Search address, chain, token or ticker…" autocomplete="off" spellcheck="false">
 <div class="dim" id="cnt">Loading…</div>
-<div class="wrap"><table><thead><tr><th>address</th><th>chain</th><th>token</th><th>allocation</th></tr></thead><tbody id="tb"></tbody></table></div>
+<div class="wrap"><table><thead><tr><th>address</th><th>tokens held</th><th>allocation</th></tr></thead><tbody id="tb"></tbody></table></div>
 
 <footer><a href="https://gokhanturhan.com/coins/">Gökhan Turhan · The Token Estate</a></footer>
 <script>
@@ -72,16 +74,26 @@ function tick(){let s=Math.max(0,Math.floor((END-Date.now())/1000));
  el.textContent=`${p(h)}h ${p(m)}m ${p(x)}s`;setTimeout(tick,1000-Date.now()%1000)}
 tick();
 document.querySelectorAll("button.copy").forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy).then(()=>{b.textContent="copied";setTimeout(()=>b.textContent="copy",1200)}));
-let rows=[];const tb=document.getElementById("tb"),cnt=document.getElementById("cnt"),q=document.getElementById("q");
+let rows=[],wallets=[];const tb=document.getElementById("tb"),cnt=document.getElementById("cnt"),q=document.getElementById("q");
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
-function render(){const t=q.value.trim().toLowerCase();const m=t?rows.filter(r=>r.k.includes(t)):rows;const show=m.slice(0,300);
- tb.innerHTML=show.map(r=>`<tr><td class="a">${esc(r.a)}</td><td>${esc(r.c)}</td><td title="${esc(r.ta)}">${esc(r.t)}</td><td>${esc(r.al)}</td></tr>`).join("");
- cnt.textContent=`${m.length.toLocaleString()} of ${rows.length.toLocaleString()} rows`+(m.length>300?" (first 300 shown; refine the search)":"");}
+const ABBR={Base:"Base",Robinhood:"RH",Ethereum:"ETH",Elysium:"Ely",BSC:"BSC",Arc:"Arc",Monad:"Monad",Unichain:"Uni"};
+const abbr=c=>ABBR[c]||c;
+function render(){const t=q.value.trim().toLowerCase();const m=t?wallets.filter(w=>w.k.includes(t)):wallets;const show=m.slice(0,300);
+ tb.innerHTML=show.map(w=>{const n=w.toks.length,label=n===1?"1 token":n.toLocaleString()+" tokens";
+  const chips=w.toks.map(r=>`<span class="chip" title="${esc(abbr(r.c)+" · "+r.ta)}">${esc(r.t)}</span>`).join("");
+  return `<tr><td class="a">${esc(w.a)}</td><td class="held"><span class="n">${label}</span> ${chips}</td><td class="al">${esc(w.al)}</td></tr>`}).join("");
+ cnt.textContent=`${m.length.toLocaleString()} of ${wallets.length.toLocaleString()} wallets`+(m.length>300?" (first 300 shown; refine the search)":"");}
 function parse(line){const out=[];let cur="",inq=false;for(let i=0;i<line.length;i++){const ch=line[i];
  if(inq){if(ch=='"'&&line[i+1]=='"'){cur+='"';i++}else if(ch=='"')inq=false;else cur+=ch}
  else if(ch=='"')inq=true;else if(ch==","){out.push(cur);cur=""}else cur+=ch}out.push(cur);return out}
 fetch("snapshot.csv").then(r=>r.text()).then(txt=>{const L=txt.trim().split(/\r?\n/).slice(1);
- rows=L.map(l=>{const [a,c,ta,t,al]=parse(l);return {a,c,ta,t,al,k:(a+" "+c+" "+ta+" "+t).toLowerCase()}});render()}).catch(()=>cnt.textContent="Could not load snapshot.csv");
+ rows=L.map(l=>{const [a,c,ta,t,al]=parse(l);return {a,c,ta,t,al,k:(a+" "+c+" "+ta+" "+t).toLowerCase()}});
+ const map=new Map();
+ for(const r of rows){let w=map.get(r.a);if(!w){w={a:r.a,al:r.al,toks:[]};map.set(r.a,w)}w.toks.push(r)}
+ wallets=[...map.values()];
+ for(const w of wallets){w.toks.sort((a,b)=>a.t.localeCompare(b.t)||a.c.localeCompare(b.c)||a.ta.localeCompare(b.ta));
+  w.k=(w.a+" "+w.toks.map(r=>r.c+" "+r.ta+" "+r.t).join(" ")).toLowerCase()}
+ render()}).catch(()=>cnt.textContent="Could not load snapshot.csv");
 let to;q.addEventListener("input",()=>{clearTimeout(to);to=setTimeout(render,120)});
 const me=document.getElementById("me"),res=document.getElementById("res");
 function check(){const v=me.value.trim().toLowerCase();

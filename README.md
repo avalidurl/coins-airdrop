@@ -33,7 +33,7 @@
 [coins register](https://gokhanturhan.com/coins/) at the snapshot blocks below. There is one row per holding,
 with columns `address, chain, token_address, ticker, allocation`. Every allocation reads **computing** for now.
 
-- 5,176 rows (holdings), 2,149 unique addresses, 987 EVM tokens across 8 chains. The zero address is excluded.
+- 5,097 rows (holdings), 2,146 unique addresses, 987 EVM tokens across 8 chains. The zero address and burn addresses are excluded.
 - Website with search: https://avalidurl.github.io/coins-airdrop/
 - Gist: https://gist.github.com/avalidurl/23020b8b4981e42557fe129de3d5a00e
 
