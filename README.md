@@ -9,19 +9,19 @@
 ## They have all promised airdrops. Only we've got your back.
 
 - The **community airdrop is in 48 hours**.
-- To qualify, **buy at least 10M of the tokens and hold them**.
+- To qualify, **buy at least 10M of either BOUNTY or NUMETAL and hold them**.
 
 ### BOUNTY (AgentBounty Token, Base)
 
 - Contract: `0x33e167FA22c9D78236b1a21C80E8B712205D1b07` ([Basescan](https://basescan.org/token/0x33e167FA22c9D78236b1a21C80E8B712205D1b07))
 - CoinGecko: https://www.coingecko.com/en/coins/agentbounty-token
-- Website: https://agentbounty.dev
+- Website: https://gokhanturhan.com/agentbounty/
 
 ### NUMETAL (NUMETAL, Base)
 
 - Contract: `0x57edb7fc54ada9ef4e113dc05a168449e63cfba3` ([Basescan](https://basescan.org/token/0x57edb7fc54ada9ef4e113dc05a168449e63cfba3))
 - CoinGecko: https://www.coingecko.com/en/coins/numetal
-- Website: https://numetal.xyz
+- Website: https://gokhanturhan.com/numetal/
 
 ## The snapshot
 
