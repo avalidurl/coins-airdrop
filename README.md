@@ -1,9 +1,9 @@
 # Community Snapshot
 
 <!-- countdown:start -->
-![Community snapshot: 35h 56m left](https://img.shields.io/badge/community%20snapshot-35h%2056m%20left-e10600?style=for-the-badge)
+![Community snapshot: 35h 46m left](https://img.shields.io/badge/community%20snapshot-35h%2046m%20left-e10600?style=for-the-badge)
 
-**Community snapshot closes in 35h 56m**, at 21 Nov 2026, 20:22 Istanbul (UTC+3) / 21 Nov 2026, 17:22 UTC.
+**Community snapshot closes in 35h 46m**, at 21 Nov 2026, 20:22 Istanbul (UTC+3) / 21 Nov 2026, 17:22 UTC.
 <!-- countdown:end -->
 
 ## They have all promised airdrops. Only we've got your back.
